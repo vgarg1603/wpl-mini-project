@@ -82,8 +82,6 @@ function loadConversation(promptId) {
                 chatsContainer.appendChild(botMsgDiv);
 
                 scrollToBottom();
-            } else {
-                alert("Failed to load conversation.");
             }
         }).catch(error => {
             console.error("erro occured", error)
