@@ -113,5 +113,47 @@ if ($action === 'store_prompt_response') {
     exit;
 }
 
+if ($action === 'get_recent_chats') {
+    try {
+        if (!isset($_SESSION['user_id'])) {
+            echo json_encode(['status' => 'error', 'message' => 'User not logged in']);
+            exit;
+        }
+
+        $user_id = $_SESSION['user_id'];
+
+        $stmt = $pdo->prepare("SELECT prompt_id, prompt_text, starred FROM prompts WHERE user_id = :user_id ORDER BY created_at DESC LIMIT 10");
+        $stmt->execute(['user_id' => $user_id]);
+        $prompts = $stmt->fetchAll();
+
+        echo json_encode(['status' => 'success', 'prompts' => $prompts]);
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Failed to fetch recent chats: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+// DELETE CHAT
+if ($action === 'delete_prompt') {
+    try {
+        $prompt_id = $data['prompt_id'] ?? 0;
+        $stmt = $pdo->prepare("DELETE FROM prompts WHERE prompt_id = :prompt_id AND user_id = :user_id");
+        $stmt->execute(['prompt_id' => $prompt_id, 'user_id' => $_SESSION['user_id']]);
+        echo json_encode(['status' => 'success']);
+    } catch (error) {
+        echo json_encode(['status' => 'error', 'message' => 'Failed to delete recent chats: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+// TOGGLE STAR
+if ($action === 'toggle_star') {
+    $prompt_id = $data['prompt_id'] ?? 0;
+    $stmt = $pdo->prepare("UPDATE prompts SET starred = NOT starred WHERE prompt_id = :prompt_id AND user_id = :user_id");
+    $stmt->execute(['prompt_id' => $prompt_id, 'user_id' => $_SESSION['user_id']]);
+    echo json_encode(['status' => 'success']);
+    exit;
+}
+
 // INVALID ACTION
 echo json_encode(['status' => 'error', 'message' => 'Invalid action']);

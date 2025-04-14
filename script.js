@@ -6,6 +6,116 @@ const promptForm = document.querySelector(".prompt-form");
 const promptInput = document.querySelector(".prompt-input");
 const stopButton = document.querySelector("#stop-btn");
 const themeToggle = document.querySelector("#theme-toggle-btn");
+const sidebar = document.querySelector("#sidebar");
+const toggleSidebarBtn = document.querySelector("#toggle-sidebar");
+const closeSidebarBtn = document.querySelector("#close-sidebar");
+const navLinksContainer = document.querySelector(".nav-links")
+
+// Sidebar Toggle
+function toggleSidebar() {
+    sidebar.classList.toggle('active');
+    container.classList.toggle('sidebar-active');
+}
+
+toggleSidebarBtn.addEventListener('click', toggleSidebar);
+closeSidebarBtn.addEventListener('click', toggleSidebar);
+
+// Close sidebar when clicking outside
+document.addEventListener('click', (e) => {
+    if (!sidebar.contains(e.target) &&
+        !toggleSidebarBtn.contains(e.target) &&
+        sidebar.classList.contains('active')) {
+        toggleSidebar();
+    }
+});
+
+async function loadRecentChats() {
+    fetch('server.php', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "get_recent_chats" })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                const chatList = document.getElementById("recent-chats-list");
+                chatList.innerHTML = "";
+
+                data.prompts.forEach(chat => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+            <span class="chat-text">${chat.prompt_text}</span>
+            <div class="chat-actions">
+              <span class="material-symbols-outlined" onclick="deleteChat(${chat.prompt_id})">delete</span>
+              <span class="material-symbols-outlined ${chat.starred ? 'active' : ''}" onclick="toggleStar(${chat.prompt_id}, this)">star</span>
+            </div>
+          `;
+
+                    li.addEventListener("click", () => {
+                        loadConversation(`${chat.prompt_id}`)
+                    })
+
+                    chatList.appendChild(li);
+                })
+            } else {
+                console.error(data.message);
+            }
+        }).catch(err => console.error("Error loading chats:", err));
+}
+
+function loadConversation(promptId) {
+    fetch(`load_conversation.php?prompt_id=${promptId}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                chatsContainer.innerHTML = ""; // Clear current chat
+                document.body.classList.add("chats-active");
+
+                // User message
+                const userMsgHTML = `<p class="message-text">${data.prompt_text}</p>`;
+                const userMsgDiv = createMsgElement(userMsgHTML, "user-message");
+                chatsContainer.appendChild(userMsgDiv);
+
+                // Bot response
+                const botMsgHTML = `<p class="message-text">${data.response_text}</p>`;
+                const botMsgDiv = createMsgElement(botMsgHTML, "bot-message");
+                chatsContainer.appendChild(botMsgDiv);
+
+                scrollToBottom();
+            } else {
+                alert("Failed to load conversation.");
+            }
+        }).catch(error => {
+            console.error("erro occured", error)
+        });
+}
+
+
+function deleteChat(promptId) {
+    fetch("server.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "delete_prompt", prompt_id: promptId })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") loadRecentChats();
+        }).catch(err => console.error("Error deleting chats:", err));
+}
+
+function toggleStar(promptId, icon) {
+    fetch("server.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "toggle_star", prompt_id: promptId })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                icon.classList.toggle("active");
+            }
+        });
+}
 
 const API_KEY = "AIzaSyC154YC0lncSOs2leUBiBBse1uWqXDS0Ug"; // Replace with your actual Gemini API key
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
@@ -42,7 +152,7 @@ function typingEffect(responseText, textElement, botMsgDiv) {
         } else {
             clearInterval(typingInterval);
         }
-    }, 40);
+    }, 20);
 }
 
 const generateResponse = async (botMsgDiv) => {
@@ -158,6 +268,10 @@ const handleFormSubmit = (e) => {
         });
     }, 600);
 };
+
+window.addEventListener("DOMContentLoaded", () => {
+    loadRecentChats();
+})
 
 promptForm.addEventListener("submit", handleFormSubmit);
 

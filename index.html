@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,8 +9,27 @@
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
+
 <body>
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="material-symbols-outlined logo">chat</span>
+      <h2>ChatBot</h2>
+      <button id="close-sidebar" class="material-symbols-outlined">close</button>
+    </div>
+
+    <div class="sidebar-content">
+      <ul class="nav-links" id="recent-chats-list">
+      </ul>
+    </div>
+  </nav>
+
+
   <div class="container">
+
+    <!-- Toggle Sidebar Button -->
+    <button id="toggle-sidebar" class="material-symbols-outlined">menu</button>
 
     <!-- Auth Links or Logout -->
     <div class="top-nav auth-links" id="auth-links">
@@ -17,22 +37,35 @@
       <a href="register.html">Register</a>
     </div>
     <div class="top-nav" id="logout-link" style="display: none;">
-      Logged as <strong id="username"></strong> |
-      <button onclick="logout()" style="cursor: pointer;">Logout</button>
+
+      <button onclick="logout()" id="logout-btn"><span class="material-symbols-outlined">
+          logout
+        </span>Logout</button>
     </div>
 
     <!-- App Header -->
     <header class="app-header">
-      <h1 class="heading">Hello, there</h1>
+      <h1 class="heading">Hello, <span id="dynamic-username"></span></h1>
       <h2 class="sub-heading">How can I help you?</h2>
     </header>
 
     <!-- Suggestions List -->
     <ul class="suggestions">
-      <li class="suggestions-item"><p class="text">Design a home office setup for remote</p><span class="material-symbols-outlined">draw</span></li>
-      <li class="suggestions-item"><p class="text">How can I level up my web development expertise in 2025?</p><span class="material-symbols-outlined">emoji_objects</span></li>
-      <li class="suggestions-item"><p class="text">Suggest some useful resources to learn PHP.</p><span class="material-symbols-outlined">php</span></li>
-      <li class="suggestions-item"><p class="text">Create a ReactJS component for the simple todo list app.</p><span class="material-symbols-outlined">integration_instructions</span></li>
+      <li class="suggestions-item">
+        <p class="text">Design a home office setup for remote</p><span class="material-symbols-outlined">draw</span>
+      </li>
+      <li class="suggestions-item">
+        <p class="text">How can I level up my web development expertise in 2025?</p><span
+          class="material-symbols-outlined">emoji_objects</span>
+      </li>
+      <li class="suggestions-item">
+        <p class="text">Suggest some useful resources to learn PHP.</p><span
+          class="material-symbols-outlined">php</span>
+      </li>
+      <li class="suggestions-item">
+        <p class="text">Create a ReactJS component for the simple todo list app.</p><span
+          class="material-symbols-outlined">integration_instructions</span>
+      </li>
     </ul>
 
     <!-- Chats Container -->
@@ -60,9 +93,12 @@
   <script>
     const username = localStorage.getItem('username');
     if (username) {
-      document.getElementById('username').textContent = username;
+      document.getElementById('dynamic-username').textContent = username;
       document.getElementById('auth-links').style.display = 'none';
       document.getElementById('logout-link').style.display = 'block';
+    }
+    else {
+      window.location.href = "http://127.0.0.1/wpl-mini-project-2/login.html";
     }
 
     function logout() {
