@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,7 +8,6 @@
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
-
 <body>
   <div class="container">
 
@@ -19,7 +17,7 @@
       <a href="register.html">Register</a>
     </div>
     <div class="top-nav" id="logout-link" style="display: none;">
-      Logged in as <strong id="username"></strong> |
+      Logged as <strong id="username"></strong> |
       <button onclick="logout()" style="cursor: pointer;">Logout</button>
     </div>
 
@@ -31,22 +29,10 @@
 
     <!-- Suggestions List -->
     <ul class="suggestions">
-      <li class="suggestions-item">
-        <p class="text">Design a home office setup for remote </p>
-        <span class="material-symbols-outlined">draw</span>
-      </li>
-      <li class="suggestions-item">
-        <p class="text">How can I level up my web development expertise in 2025?</p>
-        <span class="material-symbols-outlined">emoji_objects</span>
-      </li>
-      <li class="suggestions-item">
-        <p class="text">Suggest some useful resources to learn PHP.</p>
-        <span class="material-symbols-outlined">php</span>
-      </li>
-      <li class="suggestions-item">
-        <p class="text">Create a ReactJS component for the simple todo list app.</p>
-        <span class="material-symbols-outlined">integration_instructions</span>
-      </li>
+      <li class="suggestions-item"><p class="text">Design a home office setup for remote</p><span class="material-symbols-outlined">draw</span></li>
+      <li class="suggestions-item"><p class="text">How can I level up my web development expertise in 2025?</p><span class="material-symbols-outlined">emoji_objects</span></li>
+      <li class="suggestions-item"><p class="text">Suggest some useful resources to learn PHP.</p><span class="material-symbols-outlined">php</span></li>
+      <li class="suggestions-item"><p class="text">Create a ReactJS component for the simple todo list app.</p><span class="material-symbols-outlined">integration_instructions</span></li>
     </ul>
 
     <!-- Chats Container -->
@@ -58,8 +44,7 @@
         <form action="#" class="prompt-form">
           <input type="text" placeholder="Ask ChatBot" class="prompt-input" required />
           <div class="prompt-actions">
-            <button id="send-prompt-btn" type="button"
-              class="material-symbols-outlined">arrow_upward</button>
+            <button id="send-prompt-btn" type="submit" class="material-symbols-outlined">arrow_upward</button>
             <button type="button" id="stop-btn" class="material-symbols-outlined">stop_circle</button>
           </div>
         </form>
@@ -91,6 +76,6 @@
       });
     }
   </script>
+  <script src="script.js"></script>
 </body>
-
 </html>
