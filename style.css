@@ -323,3 +323,106 @@ body.chats-active .container :where(.app-header, .suggestions) {
 #stop-btn.show {
     display: inline-block;
 }
+
+.top-nav {
+    position: fixed;
+    top: 20px;
+    right: 30px;
+    z-index: 1000;
+}
+
+.login-btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: #1d7efd;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.login-btn:hover {
+    background: #0264e3;
+}
+
+.app-header .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.auth-links a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 15px;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+
+.auth-container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 30px;
+    border-radius: 12px;
+    background-color: var(--secondary-color);
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.auth-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.auth-form input {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    color: var(--text-color);
+    background-color: var(--primary-color);
+}
+
+.auth-form input::placeholder {
+    color: var(--placeholder-color);
+}
+
+.auth-form button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #1d7efd;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.auth-form button:hover {
+    background-color: #0264e3;
+}
+
+.auth-container p {
+    text-align: center;
+    margin-top: 15px;
+    color: var(--placeholder-color);
+}
+
+.auth-container a {
+    color: #1d7efd;
+    text-decoration: none;
+}
+
+.auth-container a:hover {
+    text-decoration: underline;
+}
+

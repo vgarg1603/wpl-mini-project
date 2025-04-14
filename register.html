@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Register</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="auth-container">
+    <h2>Register</h2>
+    <form class="auth-form">
+      <input name="username" type="text" placeholder="Username" required />
+      <input name="email" type="email" placeholder="Email" required />
+      <input name="password" type="password" placeholder="Password" required />
+      <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="login.html">Login</a></p>
+  </div>
+
+  <script>
+    document.querySelector('.auth-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+
+      const res = await fetch('server.php', {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'register',
+          username: formData.get('username'),
+          email: formData.get('email'),
+          password: formData.get('password')
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const result = await res.json();
+      alert(result.message);
+      if (result.status === 'success') {
+        window.location.href = 'login.html';
+      }
+    });
+  </script>
+</body>
+
+</html>
