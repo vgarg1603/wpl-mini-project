@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 session_start();
 
+// DB Config
 $host = 'localhost';
 $db = 'chatbot';
 $user = 'root';
@@ -25,7 +26,7 @@ try {
 $data = json_decode(file_get_contents("php://input"), true);
 $action = $data['action'] ?? '';
 
-// Register
+// REGISTER
 if ($action === 'register') {
     try {
         $username = $data['username'] ?? '';
@@ -34,13 +35,18 @@ if ($action === 'register') {
 
         $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
         $stmt->execute(['email' => $email]);
+
         if ($stmt->rowCount() > 0) {
             echo json_encode(['status' => 'error', 'message' => 'Email already registered']);
             exit;
         }
 
         $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
-        $stmt->execute(['username' => $username, 'email' => $email, 'password' => $password]);
+        $stmt->execute([
+            'username' => $username,
+            'email' => $email,
+            'password' => $password
+        ]);
 
         echo json_encode(['status' => 'success', 'message' => 'User registered successfully']);
     } catch (PDOException $e) {
@@ -49,7 +55,7 @@ if ($action === 'register') {
     exit;
 }
 
-// Login
+// LOGIN
 if ($action === 'login') {
     try {
         $email = $data['email'] ?? '';
@@ -73,7 +79,7 @@ if ($action === 'login') {
     exit;
 }
 
-// Logout
+// LOGOUT
 if ($action === 'logout') {
     session_unset();
     session_destroy();
@@ -81,4 +87,31 @@ if ($action === 'logout') {
     exit;
 }
 
+// STORE PROMPT + RESPONSE
+if ($action === 'store_prompt_response') {
+    try {
+        if (!isset($_SESSION['user_id'])) {
+            echo json_encode(['status' => 'error', 'message' => 'User not logged in']);
+            exit;
+        }
+
+        $user_id = $_SESSION['user_id'];
+        $prompt_text = $data['prompt_text'] ?? '';
+        $response_text = $data['response_text'] ?? '';
+
+        $stmt = $pdo->prepare("INSERT INTO prompts (prompt_text, response_text, user_id, created_at) VALUES (:prompt_text, :response_text, :user_id, NOW())");
+        $stmt->execute([
+            'prompt_text' => $prompt_text,
+            'response_text' => $response_text,
+            'user_id' => $user_id
+        ]);
+
+        echo json_encode(['status' => 'success', 'message' => 'Prompt and response saved successfully']);
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Failed to save prompt and response: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+// INVALID ACTION
 echo json_encode(['status' => 'error', 'message' => 'Invalid action']);

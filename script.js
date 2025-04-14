@@ -95,6 +95,28 @@ const generateResponse = async (botMsgDiv) => {
         typingEffect(botText, textElement, botMsgDiv);
         botMsgDiv.classList.remove("loading");
 
+        // Store the prompt and response in the database
+        try {
+            const storeResponse = await fetch('server.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'store_prompt_response',
+                    prompt_text: userPrompt,
+                    response_text: botText
+                })
+            });
+
+            const storeData = await storeResponse.json();
+            if (storeData.status === 'error') {
+                console.error('Failed to save prompt and response:', storeData.message);
+            } else {
+                console.log('Prompt and response saved successfully');
+            }
+        } catch (error) {
+            console.error('Error saving prompt and response:', error);
+        }
+
     } catch (error) {
         console.log(error);
         textElement.textContent = "Something went wrong. Please try again.";
