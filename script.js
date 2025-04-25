@@ -115,7 +115,7 @@ function toggleStar(promptId, icon) {
         });
 }
 
-const API_KEY = "AIzaSyC154YC0lncSOs2leUBiBBse1uWqXDS0Ug"; // Replace with your actual Gemini API key
+const API_KEY = "<gemini_api_key>"; // Replace with your actual Gemini API key
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
 const chatHistory = [];
